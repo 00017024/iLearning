@@ -17,4 +17,6 @@ module.exports = (req, res, next) => {
         console.error(err.message);
         return res.status(403).json('Not Authorized');
     }
+    console.log("User ID from token:", req.user);
 }
+

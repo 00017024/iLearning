@@ -3,6 +3,9 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-d
 import Login from "./components/Login";
 import Register from "./components/Register";
 import Dashboard from "./components/Dashboard";
+import CreateTemplate from "./components/CreateTemplate";
+import TemplateDetails from "./components/TemplateDetails";
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -11,7 +14,7 @@ function App() {
     setIsAuthenticated(boolean);
   };
 
-  async function isAuth (){
+  async function isAuth() {
     try {
       const response = await fetch("http://localhost:5000/auth/is-verified", {
         method: "GET",
@@ -19,8 +22,7 @@ function App() {
       });
 
       const parseRes = await response.json();
-
-      parseRes === true ? setIsAuthenticated(true) : setIsAuthenticated(false);
+      setIsAuthenticated(parseRes === true);
     } catch (error) {
       console.error(error.message);
     }
@@ -28,48 +30,31 @@ function App() {
 
   useEffect(() => {
     isAuth();
-  });
+  }, []);
 
   return (
     <Router>
       <Routes>
-        {/* Login Route */}
         <Route
           path="/login"
-          element={
-            !isAuthenticated ? (
-              <Login setAuth={setAuth} />
-            ) : (
-              <Navigate to="/dashboard" replace />
-            )
-          }
+          element={!isAuthenticated ? <Login setAuth={setAuth} /> : <Navigate to="/dashboard" replace />}
         />
-
-        {/* Register Route */}
         <Route
           path="/register"
-          element={
-            !isAuthenticated ? (
-              <Register setAuth={setAuth} />
-            ) : (
-              <Navigate to="/dashboard" replace />
-            )
-          }
+          element={!isAuthenticated ? <Register setAuth={setAuth} /> : <Navigate to="/dashboard" replace />}
         />
-
-        {/* Dashboard Route */}
         <Route
           path="/dashboard"
-          element={
-            isAuthenticated ? (
-              <Dashboard setAuth={setAuth} />
-            ) : (
-              <Navigate to="/login" replace />
-            )
-          }
+          element={isAuthenticated ? <Dashboard setAuth={setAuth} /> : <Navigate to="/login" replace />}
         />
-
-        {/* Default and Fallback Route */}
+        <Route
+          path="/create-template"
+          element={isAuthenticated ? <CreateTemplate /> : <Navigate to="/login" replace />}
+        />
+        <Route
+          path="/template/:id"
+          element={isAuthenticated ? <TemplateDetails /> : <Navigate to="/login" replace />}
+        />
         <Route path="/" element={<Navigate to="/login" replace />} />
         <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>
