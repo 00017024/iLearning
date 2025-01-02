@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
+
 const Dashboard = ({ setAuth }) => {
   const [name, setName] = useState("");
   const [latestTemplates, setLatestTemplates] = useState([]);

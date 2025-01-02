@@ -7,6 +7,7 @@ import CreateTemplate from "./components/CreateTemplate";
 import TemplateDetails from "./components/TemplateDetails";
 import 'bootstrap/dist/css/bootstrap.min.css';
 
+
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
