@@ -4,7 +4,10 @@ const app = express();
 const cors = require('cors');
 
 app.use(express.json());
-app.use(cors());
+app.use(cors({
+    origin: 'https://ilearning-mm6o.onrender.com', // Replace with your front-end URL
+    credentials: true, // Include credentials if necessary
+  }));
 
 // API Routes
 app.use('/auth', require('./routes/auth'));
