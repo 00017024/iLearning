@@ -3,11 +3,14 @@ const path = require('path');
 const app = express();
 const cors = require('cors');
 
+// Middleware to parse JSON
 app.use(express.json());
+
+// CORS configuration
 app.use(cors({
     origin: 'https://ilearning-mm6o.onrender.com', // Replace with your front-end URL
     credentials: true, // Include credentials if necessary
-  }));
+}));
 
 // API Routes
 app.use('/auth', require('./routes/auth'));
@@ -18,15 +21,17 @@ app.use('/api/likes', require('./routes/likes'));
 app.use('/api/comments', require('./routes/comments'));
 
 // Serve static files from React app
-app.use(express.static(path.join(__dirname, '../client/build')));
+const reactBuildPath = path.join(__dirname, '../client/build');
+app.use(express.static(reactBuildPath));
 
 // Catch-all route to serve React app
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../client/build', 'index.html'));
+    res.sendFile(path.join(reactBuildPath, 'index.html'));
 });
 
-const PORT = process.env.PORT || 5000;
-
+// Start server
+const PORT = process.env.PORT || 10000;
 app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+    console.log(`Server is running on port ${PORT}`);
+    console.log('Resolved path:', path.join(reactBuildPath, 'index.html'));
 });
