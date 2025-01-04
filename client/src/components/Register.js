@@ -24,7 +24,6 @@ const Register = ({ setAuth }) => {
       alert("Passwords do not match!");
       return;
     }
-
     try {
       const body = { email, password, name };
       const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/auth/register`, {
@@ -32,20 +31,19 @@ const Register = ({ setAuth }) => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),
       });
-
+    
       const parseRes = await response.json();
-
+    
       if (parseRes.token) {
         localStorage.setItem("token", parseRes.token);
         setAuth(true);
-        
         navigate("/dashboard");
       } else {
-        alert(parseRes.message || "Registration failed");
+        alert(parseRes.error || "Registration failed");
         setAuth(false);
       }
     } catch (error) {
-      console.error(error.message);
+      console.error("Error during registration:", error.message);
     }
   };
 
