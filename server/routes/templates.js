@@ -2,7 +2,7 @@ const router = require('express').Router();
 const pool = require('../db');
 const authorization = require('../middleware/authorization');
 
-// Get all templates
+
 router.get('/', authorization, async (req, res) => {
     try {
         const userId = req.user;
@@ -21,13 +21,13 @@ router.get('/', authorization, async (req, res) => {
 
 router.post('/', authorization, async (req, res) => {
     try {
-        const { title, description, topic, is_public, selected_users } = req.body;
+        const { title, description, topic } = req.body;
         const userId = req.user;
 
         const newTemplate = await pool.query(
-            `INSERT INTO templates (title, description, topic, user_id, is_public, selected_users) 
-             VALUES ($1, $2, $3, $4, $5, $6) RETURNING *`,
-            [title, description, topic, userId, is_public || false, selected_users || '{}']
+            `INSERT INTO templates (title, description, topic, user_id) 
+             VALUES ($1, $2, $3, $4) RETURNING *`,
+            [title, description || null, topic, userId]
         );
 
         res.json(newTemplate.rows[0]);
@@ -38,10 +38,11 @@ router.post('/', authorization, async (req, res) => {
 });
 
 
+
 router.put('/:id', authorization, async (req, res) => {
     try {
         const { id } = req.params;
-        const { title, description, topic, is_public, selected_users } = req.body;
+        const { title, description, topic, is_favorite } = req.body;
         const userId = req.user;
 
         const template = await pool.query(
@@ -55,9 +56,9 @@ router.put('/:id', authorization, async (req, res) => {
 
         const updatedTemplate = await pool.query(
             `UPDATE templates 
-             SET title = $1, description = $2, topic = $3, is_public = $4, selected_users = $5 
-             WHERE id = $6 RETURNING *`,
-            [title, description, topic, is_public, selected_users, id]
+             SET title = $1, description = $2, topic = $3, is_favorite = $4, updated_at = CURRENT_TIMESTAMP
+             WHERE id = $5 RETURNING *`,
+            [title, description || null, topic, is_favorite || false, id]
         );
 
         res.json(updatedTemplate.rows[0]);
@@ -77,7 +78,7 @@ router.delete('/:id', authorization, async (req, res) => {
         console.log("User ID from token:", userId);
         console.log("Template ID provided:", id);
 
-        // Check if the template belongs to the user
+        
         const template = await pool.query(
             `SELECT * FROM templates WHERE id = $1 AND user_id = $2`,
             [id, userId]
@@ -89,7 +90,7 @@ router.delete('/:id', authorization, async (req, res) => {
             return res.status(403).json("Not Authorized or Template not found");
         }
 
-        // Delete the template
+        
         await pool.query(`DELETE FROM templates WHERE id = $1`, [id]);
 
         res.json("Template deleted successfully");
