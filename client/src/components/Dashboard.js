@@ -29,7 +29,7 @@ const Dashboard = ({ setAuth }) => {
   // Fetch templates grouped by latest and favorite
   async function fetchTemplates() {
     try {
-      const response = await fetch("http://localhost:5000/templates", {
+      const response = await fetch("https://ilearning-project.onrender.com/templates", {
         method: "GET",
         headers: { token: localStorage.token },
       });
@@ -51,7 +51,7 @@ const Dashboard = ({ setAuth }) => {
     }
     setIsLoading(true);
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/templates/search?query=${query}`, {
+      const response = await fetch("https://ilearning-project.onrender.com/templates/search?query=${query}", {
         method: "GET",
         headers: { token: localStorage.token },
       });
