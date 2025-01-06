@@ -14,7 +14,7 @@ const Dashboard = ({ setAuth }) => {
   // Fetch the user's name
   async function getName() {
     try {
-      const response = await fetch("http://localhost:5000/dashboard", {
+      const response = await fetch("https://ilearning-project.onrender.com/auth/is-verified/dashboard", {
         method: "GET",
         headers: { token: localStorage.token },
       });

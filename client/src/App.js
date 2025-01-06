@@ -17,10 +17,11 @@ function App() {
 
   async function isAuth() {
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/auth/is-verified`, {
-        method: "GET",
-        headers: { token: localStorage.token },
-      });
+      const response = await fetch("https://ilearning-project.onrender.com/auth/is-verified", {
+    method: "GET",
+    headers: { token: localStorage.token },
+});
+
 
       const parseRes = await response.json();
       setIsAuthenticated(parseRes === true);
